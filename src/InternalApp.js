@@ -1,25 +1,14 @@
 import React, {useState,useEffect,useRef} from "react";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   useLocation
 } from "react-router-dom";
 
 import Home from './Home';
-import Upload from './Upload';
 import Profile from './Profile';
-import Login from './Login';
-import Signup from './Signup';
-import PasswordReset from './PasswordReset';
-import UserProvider from './providers/UserProvider';
 
 import './App.css';
-
-import HomeIcon from '@material-ui/icons/Home';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 
@@ -51,10 +40,6 @@ function InternalApp(props) {
             <CSSTransition timeout={timeout} className="page-slider" mountOnEnter={false} mountOnExit={true}>
               <div className=''>
                 <Switch>
-                <Route exact path="/upload">
-                  <Upload />
-                </Route>
-
                   <Route exact path="/home">
                     <Home />
                   </Route>

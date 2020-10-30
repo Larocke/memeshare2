@@ -36,13 +36,14 @@ export const generateUserDocument = async (user, additionalData) => {
   const userRef = db.doc(`users/${user.uid}`);
   const snapshot = await userRef.get();
   if (!snapshot.exists) {
-    const { email, displayName, photoURL, description } = user;
+    const { email, displayName, photoURL, description, memesOwned } = user;
     try {
       await userRef.set({
         displayName,
         email,
         photoURL,
         description,
+        memesOwned,
         ...additionalData
       });
     } catch (error) {

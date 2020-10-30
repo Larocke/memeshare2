@@ -1,8 +1,9 @@
-import React, {useContext, useState, useEffect, useRef} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {UserContext} from './providers/UserProvider';
 import {db, storage, auth} from './firebase';
 import {useHistory, Link} from 'react-router-dom';
 import firebase from 'firebase/app';
+import MemesOwned from './MemesOwned';
 
 
 import './Profile.css';
@@ -11,8 +12,9 @@ import ImageIcon from '@material-ui/icons/Image';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {Modal, Button} from 'react-bootstrap';
+import {Modal, Button, Container, Row, Col} from 'react-bootstrap';
 
 
 
@@ -22,8 +24,9 @@ function Profile() {
   const [imageHash, setImageHash] = useState(Date.now());
   const [photoURL, setPhotoURL] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
+  const [memesOwned, setMemesOwned] = useState([]);
+  const [uploadingMeme, setUploadingMeme] = useState(false);
 
   useEffect(() => {
     if(user == null){
@@ -31,25 +34,30 @@ function Profile() {
     }else{
       setPhotoURL(user.photoURL);
       setDisplayName(user.displayName);
-      setEmail(user.email);
       setDescription(user.description);
+      setMemesOwned(user.memesOwned);
     }
-  }, [])
+  }, [imageHash])
 
   const [showModal, setShowModal] = useState(false);
+  const [showUploadMeme, setShowUploadMeme] = useState(false);
 
   const [newDescription, setNewDescription] = useState("");
-  const [descriptionAltered, setDescriptionAltered] = useState(0);
+
+  const [newMeme, setNewMeme] = useState(null);
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
+
+  const handleCloseUploadMeme = () => setShowUploadMeme(false);
+  const handleShowUploadMeme = () => setShowUploadMeme(true);
 
   const handleNewDescription = (event) => {
     setNewDescription(event.currentTarget.value)
   }
 
   const submitNewDescription = async () => {
-    const descriptionUpdate = await db.collection('users').doc(user.uid).update({description: newDescription});
+    await db.collection('users').doc(user.uid).update({description: newDescription});
     setDescription(newDescription);
     setNewDescription('');
     handleCloseModal();
@@ -65,14 +73,21 @@ function Profile() {
           error => {console.log(error)},
           async () => {
             const picURL = await storage.ref('profilepics').child(user.uid).getDownloadURL();
-            const picUpdate = await db.collection('users').doc(user.uid).update({photoURL: picURL});
+            await db.collection('users').doc(user.uid).update({photoURL: picURL});
             setImageHash(Date.now());
           });
       }
     }
 
-    const uploadNewMeme = async (e) => {
+    const handleNewMeme = (e) => {
       if(e.target.files[0]){
+        setNewMeme(e.target.files[0]);
+      }
+
+    }
+
+    const uploadNewMeme = async () => {
+        setUploadingMeme(true);
         // creates an empty meme template in database to obtain ID
         const memeCreateInDB = await db.collection('memes').add({
           channel: displayName,
@@ -82,7 +97,7 @@ function Profile() {
           shares: "0",
           url: ""});
 
-        const uploadTask = storage.ref('memes/' + memeCreateInDB.id).put(e.target.files[0]);
+        const uploadTask = storage.ref('memes/' + memeCreateInDB.id).put(newMeme);
 
         uploadTask.on(
           "state_changed",
@@ -91,10 +106,14 @@ function Profile() {
           async () => {
             // returns meme URL, adds that URL to memes owned in the user profile, updates url in meme template mentioned above
             const memeURL = await storage.ref('memes').child(memeCreateInDB.id).getDownloadURL();
-            const userUpdate = await db.collection('users').doc(user.uid).update({memesOwned: firebase.firestore.FieldValue.arrayUnion(memeCreateInDB.id)});
-            const memeUpdate = await db.collection('memes').doc(memeCreateInDB.id).update({url: memeURL});
-          });
-      }
+            await db.collection('users').doc(user.uid).update({memesOwned: firebase.firestore.FieldValue.arrayUnion(memeCreateInDB.id)});
+            await db.collection('memes').doc(memeCreateInDB.id).update({url: memeURL});
+
+            setMemesOwned(prev => [...prev, memeCreateInDB.id]);
+            handleCloseUploadMeme();
+            setUploadingMeme(false);
+
+        });
     }
 
     const signOut = () => {
@@ -120,7 +139,7 @@ function Profile() {
               marginRight: "auto"
             }}>
                 <label>
-                  <input type="file" onChange={uploadNewProfilePic} />
+                  <input className="hidden" type="file" onChange={uploadNewProfilePic} />
                   <ImageIcon fontSize="large" className="customPhotoUpload" />
                 </label>
           </div>
@@ -136,14 +155,24 @@ function Profile() {
             <a className="highlight-button" onClick={handleShowModal}>Edit Description</a>
           </div>
 
-          <label className="center-object">
-            <input type="file" onChange={uploadNewMeme} />
-            <AddIcon className="highlight-button" fontSize="large" />
-          </label>
 
+          <AddIcon className="highlight-button center-object" fontSize="large" onClick={handleShowUploadMeme} />
 
 
         </div>
+
+        <Container>
+          <Row>
+            {memesOwned.map((memeId, index) => {
+              return <Col xs={4} className="panels">
+               <MemesOwned
+                key={index}
+                memeId = {memeId}
+               />
+               </Col>
+            })}
+          </Row>
+        </Container>
 
 
 
@@ -152,6 +181,28 @@ function Profile() {
           <textarea maxLength="50" value={newDescription} onChange={handleNewDescription} />
           <Button onClick={submitNewDescription}>Submit</Button>
         </Modal>
+
+        <Modal show={showUploadMeme} onHide={handleCloseUploadMeme} centered>
+          {uploadingMeme ?
+            <div className="center-object">
+              <CircularProgress className="circular-progress" />
+              <h2>Upload...</h2>
+            </div> :
+            <div>
+              <h4>Upload New Meme</h4>
+              <p>Description</p>
+              <textarea maxLength="200" value={newDescription} onChange={handleNewDescription} />
+              <br />
+              <input type="file" onChange={handleNewMeme} />
+              <br />
+              <Button onClick={uploadNewMeme}>Submit</Button>
+            </div>
+          }
+
+
+        </Modal>
+
+
 
     </div>
   );

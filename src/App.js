@@ -1,24 +1,16 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link,
-  useLocation
+  Route
 } from "react-router-dom";
 
-import Home from './Home';
-import Upload from './Upload';
-import Profile from './Profile';
 import Login from './Login';
 import Signup from './Signup';
 import PasswordReset from './PasswordReset';
 import UserProvider from './providers/UserProvider';
 
 import './App.css';
-
-import HomeIcon from '@material-ui/icons/Home';
-import AddBoxIcon from '@material-ui/icons/AddBox'
 
 import InternalApp from './InternalApp';
 

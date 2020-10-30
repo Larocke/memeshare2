@@ -1,4 +1,4 @@
-input[type="file"] {
+.hidden {
     display: none;
 }
 
@@ -22,4 +22,13 @@ input[type="file"] {
 .description{
   width: 80%;
   margin: 20px auto;
+}
+
+.panels{
+  margin: 0;
+  padding: 0;
+}
+.circular-progress{
+  position: relative;
+  left: 30px;
 }

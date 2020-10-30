@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {
   Link,
   Redirect
@@ -30,6 +30,8 @@ function Signup() {
     setEmail("");
     setPassword("");
     setDisplayName("");
+
+    setRedirect(true);
   };
   const onChangeHandler = event => {
     const { name, value } = event.currentTarget;
@@ -45,7 +47,7 @@ function Signup() {
   return (
     redirect ? <Redirect to='/home' /> :
     <div>
-      <img className="center-object" src={MemeSHARELogo} />
+      <img className="center-object" src={MemeSHARELogo} alt="MemeSHARE logo" />
       <div className="login center-object">
         {error !== null && (
           <div className="py-4 bg-red-600 w-full text-white text-center mb-3">
