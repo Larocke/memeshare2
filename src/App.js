@@ -1,25 +1,53 @@
-import logo from './logo.svg';
+import React, {useEffect} from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useLocation
+} from "react-router-dom";
+
+import Home from './Home';
+import Upload from './Upload';
+import Profile from './Profile';
+import Login from './Login';
+import Signup from './Signup';
+import PasswordReset from './PasswordReset';
+import UserProvider from './providers/UserProvider';
+
 import './App.css';
+
+import HomeIcon from '@material-ui/icons/Home';
+import AddBoxIcon from '@material-ui/icons/AddBox'
+
+import InternalApp from './InternalApp';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <UserProvider>
+      <Router>
+        <div className="app">
+
+          <Switch>
+
+            <Route exact path="/">
+              <Login />
+            </Route>
+
+            <Route exact path="/signup">
+              <Signup />
+            </Route>
+
+            <Route exact path="/passwordReset">
+              <PasswordReset />
+            </Route>
+          </Switch>
+
+          <InternalApp />
+        </div>
+      </Router>
+    </UserProvider>
+    )
 }
 
 export default App;

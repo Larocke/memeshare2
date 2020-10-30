@@ -1,0 +1,12 @@
+.meme-footer{
+  position: relative;
+  color: white;
+  bottom: 100px;
+  left: 30px;
+  display: flex;
+
+}
+
+.meme-footer-text{
+  flex: 1;
+}

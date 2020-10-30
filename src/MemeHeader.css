@@ -1,0 +1,11 @@
+.meme-header{
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  color: white;
+}
+
+.meme-header-buttons{
+  padding: 20px;
+  text-align: center;
+}

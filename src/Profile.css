@@ -1,0 +1,25 @@
+input[type="file"] {
+    display: none;
+}
+
+.customPhotoUpload{
+  position: relative;
+  top: 160px;
+  left: 160px;
+}
+
+.highlight-button:hover{
+  color: blue;
+  text-align: center;
+}
+
+.center-object{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.description{
+  width: 80%;
+  margin: 20px auto;
+}

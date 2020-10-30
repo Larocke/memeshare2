@@ -1,0 +1,25 @@
+/**/
+html{
+  scroll-snap-type: y mandatory;
+}
+
+/*Meme being displayed*/
+.home-memes{
+  position: relative;
+  height: 95vh;
+  overflow: scroll;
+  width: 100vw;
+  max-width: 500px;
+  scroll-snap-type: y mandatory;
+}
+
+/*Hide scrollbar for Chrome, Safari, Opera*/
+.home-memes::-webkit-scrollbar{
+  display: none;
+}
+
+/*Hide scrollbar for Internet Explorer, Edge and Firefox*/
+.home-memes{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

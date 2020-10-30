@@ -1,0 +1,16 @@
+.meme{
+  position: relative;
+  background-color: white;
+  height: 500px;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.meme-card{
+  background-color: black;
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+
+}

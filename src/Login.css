@@ -1,0 +1,14 @@
+.center-object{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login{
+  width: 90%;
+  margin-top: 10%;
+}
+
+.button-bottom{
+  margin-bottom: 30px;
+}
