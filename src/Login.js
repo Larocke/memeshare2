@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import "./Login.css";
 import {auth, signInWithGoogle} from './firebase';
+import firebase from 'firebase/app';
 
 import MemeSHARELogo from './LightVertical.png'
 
@@ -18,10 +19,27 @@ function Login(){
 
   const signInWithEmailAndPasswordHandler = (event,email, password) => {
     event.preventDefault();
-    auth.signInWithEmailAndPassword(email, password).catch(error => {
-      setError("Error signing in with password and email!");
-      console.error("Error signing in with password and email", error);
-    });
+
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+
+        return auth.signInWithEmailAndPassword(email, password);
+        // .catch(error => {
+          // setError("Error signing in with password and email!");
+          // console.error("Error signing in with password and email", error);
+        // });
+      })
+      .catch(error => {
+        setError("Error with Persistence");
+        console.log("Error with Persistence", error);
+      })
+
+
+
+
+
+
+
     setRedirect(true);
   };
 

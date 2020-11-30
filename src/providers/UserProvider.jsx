@@ -1,19 +1,29 @@
-import React, {Component, createContext} from 'react';
-import {auth, generateUserDocument} from "../firebase";
+import React, { Component, createContext } from "react";
+import { auth, generateUserDocument } from "../firebase";
+import {withRouter} from 'react-router-dom';
 
-export const UserContext = createContext({user: null});
-
+export const UserContext = createContext({ user: null });
 class UserProvider extends Component {
+
   state = {
     user: null
   };
 
   componentDidMount = () => {
-    auth.onAuthStateChanged(async userAuth => {
+    auth.onAuthStateChanged(async (userAuth) => {
       const user = await generateUserDocument(userAuth);
-      this.setState({user});
+      this.setState({ user });
     });
   };
+
+  componentWillReceiveProps = (nextProp) => {
+    if(nextProp.location !== this.props.location){
+      auth.onAuthStateChanged(async (userAuth) => {
+        const user = await generateUserDocument(userAuth);
+        this.setState({ user });
+      });
+    }
+  }
 
   render() {
     return (
@@ -23,5 +33,4 @@ class UserProvider extends Component {
     );
   }
 }
-
-export default UserProvider;
+export default withRouter(UserProvider);

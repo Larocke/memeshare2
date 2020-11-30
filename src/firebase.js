@@ -33,17 +33,20 @@ export const signInWithGoogle = () => {
 
 export const generateUserDocument = async (user, additionalData) => {
   if (!user) return;
+
   const userRef = db.doc(`users/${user.uid}`);
+
   const snapshot = await userRef.get();
+
   if (!snapshot.exists) {
-    const { email, displayName, photoURL, description, memesOwned } = user;
+    const { email, displayName, photoURL} = user;
+
     try {
       await userRef.set({
         displayName,
         email,
         photoURL,
-        description,
-        memesOwned,
+
         ...additionalData
       });
     } catch (error) {

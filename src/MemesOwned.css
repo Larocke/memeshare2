@@ -1,6 +1,7 @@
 .frame {
     height: 200px;      /* Equals maximum image height */
     width: 100%;
+    background-color: white;
     border: 1px solid black;
     white-space: nowrap; /* This is required unless you put the helper span closely near the img */
 

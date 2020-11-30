@@ -16,8 +16,8 @@ import InternalApp from './InternalApp';
 
 function App() {
   return (
-    <UserProvider>
       <Router>
+        <UserProvider>
         <div className="app">
 
           <Switch>
@@ -37,8 +37,9 @@ function App() {
 
           <InternalApp />
         </div>
+        </UserProvider>
       </Router>
-    </UserProvider>
+
     )
 }
 

@@ -3,13 +3,15 @@ html{
   scroll-snap-type: y mandatory;
 }
 
+
+
 /*Meme being displayed*/
 .home-memes{
   position: relative;
-  height: 95vh;
+  height: 100vh;
   overflow: scroll;
   width: 100vw;
-  max-width: 500px;
+  overflow-x: hidden;
   scroll-snap-type: y mandatory;
 }
 

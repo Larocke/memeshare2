@@ -4,7 +4,7 @@ import MemeFooter from './MemeFooter';
 import MemeSidebar from './MemeSidebar';
 import MemeHeader from './MemeHeader';
 
-function Meme({url, channel, description, likes, messages, shares}){
+function Meme({url, channel, description, likes, messages, shares, uid}){
   const [iconsVisible, setIconsVisible] = useState(true);
 
   return (
@@ -23,6 +23,7 @@ function Meme({url, channel, description, likes, messages, shares}){
             likes = {likes}
             messages = {messages}
             shares = {shares}
+            uid = {uid}
            />
            <MemeHeader
            />

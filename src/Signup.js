@@ -21,7 +21,11 @@ function Signup() {
 
     try{
       const {user} = await auth.createUserWithEmailAndPassword(email, password);
-      generateUserDocument(user, {displayName});
+      generateUserDocument(user, {
+        displayName: displayName,
+        description: "",
+        memesOwned: []
+      });
     }
     catch(error){
       setError('Error Signing up with email and password');
@@ -33,6 +37,7 @@ function Signup() {
 
     setRedirect(true);
   };
+
   const onChangeHandler = event => {
     const { name, value } = event.currentTarget;
     if (name === "userEmail") {
@@ -45,7 +50,7 @@ function Signup() {
   };
 
   return (
-    redirect ? <Redirect to='/home' /> :
+    redirect ? <Redirect to='/' /> :
     <div>
       <img className="center-object" src={MemeSHARELogo} alt="MemeSHARE logo" />
       <div className="login center-object">

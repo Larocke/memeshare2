@@ -15,7 +15,7 @@ function Home() {
   return (
     <div>
       <div className="home-memes">
-        {memes.map(({url, channel, description, likes, messages, shares}, index) => {
+        {memes.map(({url, channel, description, likes, messages, shares, uid}, index) => {
           return <Meme
             key={index}
             url = {url}
@@ -24,6 +24,7 @@ function Home() {
             likes = {likes}
             messages = {messages}
             shares = {shares}
+            uid = {uid}
            />
         })}
       </div>

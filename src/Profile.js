@@ -27,22 +27,31 @@ function Profile() {
   const [description, setDescription] = useState("");
   const [memesOwned, setMemesOwned] = useState([]);
   const [uploadingMeme, setUploadingMeme] = useState(false);
+  const [rerender, setRerender] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if(user == null){
-      history.push("/");
+      setLoading(true);
+      setRerender(prev => prev+1);
+
+      if(rerender > 1000){
+        history.push("/");
+      }
     }else{
       setPhotoURL(user.photoURL);
       setDisplayName(user.displayName);
       setDescription(user.description);
       setMemesOwned(user.memesOwned);
+      setLoading(false);
     }
-  }, [imageHash])
+  }, [rerender]);
 
   const [showModal, setShowModal] = useState(false);
   const [showUploadMeme, setShowUploadMeme] = useState(false);
 
   const [newDescription, setNewDescription] = useState("");
+  const [memeDescription, setMemeDescription] = useState("");
 
   const [newMeme, setNewMeme] = useState(null);
 
@@ -54,6 +63,10 @@ function Profile() {
 
   const handleNewDescription = (event) => {
     setNewDescription(event.currentTarget.value)
+  }
+
+  const handleMemeDescription = (event) => {
+    setMemeDescription(event.currentTarget.value)
   }
 
   const submitNewDescription = async () => {
@@ -95,7 +108,9 @@ function Profile() {
           likes: "0",
           messages: {},
           shares: "0",
-          url: ""});
+          url: "",
+          uid: ""
+        });
 
         const uploadTask = storage.ref('memes/' + memeCreateInDB.id).put(newMeme);
 
@@ -107,7 +122,7 @@ function Profile() {
             // returns meme URL, adds that URL to memes owned in the user profile, updates url in meme template mentioned above
             const memeURL = await storage.ref('memes').child(memeCreateInDB.id).getDownloadURL();
             await db.collection('users').doc(user.uid).update({memesOwned: firebase.firestore.FieldValue.arrayUnion(memeCreateInDB.id)});
-            await db.collection('memes').doc(memeCreateInDB.id).update({url: memeURL});
+            await db.collection('memes').doc(memeCreateInDB.id).update({url: memeURL, description: memeDescription, uid: memeCreateInDB.id});
 
             setMemesOwned(prev => [...prev, memeCreateInDB.id]);
             handleCloseUploadMeme();
@@ -122,6 +137,9 @@ function Profile() {
     }
 
   return (
+    <div>
+    {loading ?
+      <div><h1>Loading</h1></div> :
     <div>
         <div className="border items-center md:flex-row md:items-start border-blue-400 px-3 py-4">
 
@@ -191,7 +209,7 @@ function Profile() {
             <div>
               <h4>Upload New Meme</h4>
               <p>Description</p>
-              <textarea maxLength="200" value={newDescription} onChange={handleNewDescription} />
+              <textarea maxLength="200" value={memeDescription} onChange={handleMemeDescription} />
               <br />
               <input type="file" onChange={handleNewMeme} />
               <br />
@@ -205,7 +223,9 @@ function Profile() {
 
 
     </div>
-  );
+  }
+</div>
+);
 }
 
 export default Profile;

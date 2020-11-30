@@ -7,6 +7,7 @@ import {
 
 import Home from './Home';
 import Profile from './Profile';
+import ProfileMemeScreen from './ProfileMemeScreen';
 
 import './App.css';
 
@@ -46,6 +47,10 @@ function InternalApp(props) {
 
                   <Route exact path="/profile">
                     <Profile />
+                  </Route>
+
+                  <Route exact path="/profileMemeScreen">
+                    <ProfileMemeScreen />
                   </Route>
                 </Switch>
               </div>
